@@ -1,0 +1,12 @@
+8
+10
+1:0:10:Chefe
+2:1:10:Selvagem
+3:2:10:Grande Artista
+4:3:10:Amante de Praia
+5:3:10:Artolas
+6:4:20:O Maior
+7:5:20:O Amigo
+8:6:20:O Beberolas
+9:0:20:O Esperto
+10:7:20:O Barulhento
