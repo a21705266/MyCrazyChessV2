@@ -1,5 +1,8 @@
 package pt.ulusofona.lp2.crazyChess;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class CrazyPiece {
    protected int id;
    protected int tipo;
@@ -51,5 +54,37 @@ public abstract class CrazyPiece {
             }
         }
         return true;
+    }
+    public abstract List<String> sugestoesMovimento(List<String> sugestoes);
+    public boolean movePeca(int xD, int yD) {
+        //retornar falso caso coords de destino estejam fora do tabuleiro
+        if (x >= s.dimensao || y >= s.dimensao || y < 0 || x < 0) {
+            return false;
+        }
+
+        //Buscar lista de sugestoes -> Se as coords de destino forem um sugestao temos uma jogada valida
+        List<String> sugestoes = new ArrayList<String>();
+        sugestoes = sugestoesMovimento(sugestoes);
+
+        //se for invlido retorna falso
+        if(sugestoes.equals("Pedido Inválido")){
+            return false;
+        }
+        //Percorrer jogadas sugeridas e verificar se as coords destino constam nas sugestoes
+        for(String str : sugestoes){
+            String sugestoesCoords[] = str.split(", ");
+
+            //coords sugeridas
+            int xSugerido = Integer.parseInt(sugestoesCoords[0]);
+            int ySugerido = Integer.parseInt(sugestoesCoords[1]);
+
+            //verificar se coords sugeridas == a coords destino
+            if(xSugerido == xD && ySugerido == yD){
+                return true;
+            }
+        }
+        //Nao encontrou compatibilidade
+        return false;
+
     }
 }

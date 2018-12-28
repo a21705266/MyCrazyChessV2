@@ -27,11 +27,14 @@ public class TorreH extends CrazyPiece {
         return "torre_h_white.png";
     }
 
-    public List<String> sugestoesMovimento(){
+    @Override
+    public boolean movePeca(int xD, int yD) {
+        return false;
+    }
 
-        List<String> sugestoes = new ArrayList<String>();
+    public List<String> sugestoesMovimento(List<String> sugestoes){
 
-
+        //Não existe = Pediod Invalido
         if(s.tabuleiro[x][y]==0){
             sugestoes.add("Pedido Inválido");
             return sugestoes;

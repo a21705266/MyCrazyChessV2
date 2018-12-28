@@ -181,19 +181,15 @@ public class Simulador {
     }
 
     public boolean processaJogada(int xO, int yO, int xD, int Yd) {
+        //Precisamos
+        int idPecaJogada = tabuleiro[xO][yO];
 
-        //Feito no verifica posicao
-        if (xD >= dimensao || Yd >= dimensao || Yd < 0 || xD < 0) {
-            return false;
-        }
         //Feito no movimento de peça
         if (xO >= dimensao || yO >= dimensao || yO < 0 || xO < 0) {
             return false;
         }
 
-        //Precisamos
-        int idPecaJogada = tabuleiro[xO][yO];
-        //Precisamos
+        //Fazer no obterSugestoesJogada
         //Não existe peça nas coords  de origem
         if (idPecaJogada == 0) {
             if (turn) {
@@ -221,9 +217,8 @@ public class Simulador {
             return false;
         }
 
-        //Fazemos no movimento da peça (mover a peça apagando coords antigas e comer peça se necessario)
         //Verifica se avança uma unidade
-        if (xD == xO + 1 || Yd == yO + 1 || xD == xO - 1 || Yd == yO - 1) {
+        if (pecaJogada.movePeca(xD,Yd)) {
             //se a posicao estiver livre
             if (tabuleiro[xD][Yd] == 0) {
                 tabuleiro[xD][Yd] = idPecaJogada;
@@ -240,7 +235,6 @@ public class Simulador {
 
                 return true;
             }// existe peca na posicao destino
-            //Feito no moviemnto de peça a parte de captura
             else if (hm.containsKey(tabuleiro[xD][Yd])) {
                 CrazyPiece c = hm.get(tabuleiro[xD][Yd]);
                 //Id Diferente captura o C
@@ -491,6 +485,24 @@ public class Simulador {
 
         //mudar turno
         turn = !turn;
+    }
+
+    public List<String> obterSugestoesJogada(int xO, int yO){
+        int idPeca = tabuleiro[xO][yO];
+        CrazyPiece peca = hm.get(idPeca);
+        List<String> sugestoes = new ArrayList<>();
+
+        if(tabuleiro[xO][yO]==0){
+            sugestoes.add("Pedido Inválido");
+            return sugestoes;
+        }
+
+        if (peca.getIdEquipa() != getIDEquipaAJogar()){
+            sugestoes.add("Pedido Inválido");
+            return sugestoes;
+        }
+
+        return peca.sugestoesMovimento(sugestoes);
     }
 
 }

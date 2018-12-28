@@ -26,9 +26,7 @@ public class TorreV extends CrazyPiece {
         return "torre_v_white.png";
     }
 
-    public List<String> sugestoesMovimento(){
-
-        List<String> sugestoes = new ArrayList<String>();
+    public List<String> sugestoesMovimento(List<String> sugestoes){
 
         if(s.tabuleiro[x][y]==0){
             sugestoes.add("Pedido Inválido");
