@@ -38,4 +38,18 @@ public abstract class CrazyPiece {
         return idEquipa;
     }
     public abstract String getImagePNG();
+    public boolean verificaPosicao(int xD, int yD) {
+        if (xD >= s.dimensao || yD >= s.dimensao || yD < 0 || xD < 0) {
+            return false;
+        }
+        // se for 0 nunca contem
+        if (s.hm.containsKey(s.tabuleiro[xD][yD])) {
+            CrazyPiece c = s.hm.get(s.tabuleiro[xD][yD]);
+            //Id Iguais retorna false
+            if (c.getIdEquipa() == idEquipa) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

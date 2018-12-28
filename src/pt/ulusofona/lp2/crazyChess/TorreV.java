@@ -1,5 +1,8 @@
 package pt.ulusofona.lp2.crazyChess;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class TorreV extends CrazyPiece {
     @Override
     public String toString() {
@@ -21,5 +24,40 @@ public class TorreV extends CrazyPiece {
             return "torre_v_black.png";
 
         return "torre_v_white.png";
+    }
+
+    public List<String> sugestoesMovimento(){
+
+        List<String> sugestoes = new ArrayList<String>();
+
+        if(s.tabuleiro[x][y]==0){
+            sugestoes.add("Pedido Inválido");
+            return sugestoes;
+        }
+
+        //Verifica os caminhos para a esquerda (x+1 para evitar a posiçao origem)
+        for(int i = y+1; i<=s.dimensao; i++){
+            //Chama função de verificar
+            if(verificaPosicao(x,i)){
+                //adiciona String
+                sugestoes.add(x + ", " + i);
+            }else{
+                //Se o verificaPosicao econtrar uma peça no caminho da mesma equipa termina o ciclo
+                break;
+            }
+        }
+        //Verifica os caminhos para a esquerda (x-1 para evitar a posiçao origem)
+        for(int i = y-1; i>0; i--){
+            //Chama função de verificar
+            if(verificaPosicao(x,i)){
+                //adiciona String
+                sugestoes.add(x + ", " + i);
+            }else{
+                //Se o verificaPosicao econtrar uma peça no caminho da mesma equipa termina o ciclo
+                break;
+            }
+        }
+
+        return sugestoes;
     }
 }

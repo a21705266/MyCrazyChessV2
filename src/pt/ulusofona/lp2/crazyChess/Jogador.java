@@ -10,35 +10,54 @@ public class Jogador {
     int jogadasValidas = 0;
     int tentativasInvalidas = 0;
 
-    Jogador(int idEquipa){
+    Jogador(int idEquipa) {
         this.idEquipa = idEquipa;
         listaPecas = new ArrayList<>();
     }
-    public void addPeca(CrazyPiece piece){
-            listaPecas.add(piece);
+
+    public void addPeca(CrazyPiece piece) {
+        listaPecas.add(piece);
     }
-    public void removePeca(CrazyPiece piece){
-            listaPecas.remove(piece);
+
+    public void removePeca(CrazyPiece piece) {
+        listaPecas.remove(piece);
     }
-    public void incrementaCapuradas(){
+
+    public void incrementaCapuradas() {
         capturadas++;
     }
-    public void incrementaJogadasValidas(){
+
+    public void incrementaJogadasValidas() {
         jogadasValidas++;
     }
-    public void incrementaTentativasInvalidas(){
+
+    public void incrementaTentativasInvalidas() {
         tentativasInvalidas++;
     }
-    public int listaComprimento(){
+
+    public int listaComprimento() {
         return listaPecas.size();
     }
+
     //1.Peças Capturadas || 2.Jogadas Validas || 3.Tentativas Invalidas
-    public List<Integer> getEstatisticas(){
+    public List<Integer> getEstatisticas() {
         List<Integer> estatisticas = new ArrayList<Integer>();
         estatisticas.add(capturadas);
         estatisticas.add(jogadasValidas);
         estatisticas.add(tentativasInvalidas);
 
         return estatisticas;
+    }
+
+    public void setCapturadas(int capturadas) {
+        this.capturadas = capturadas;
+    }
+
+    public void setJogadasInvalidas(int jogadasInvalidas) {
+        this.tentativasInvalidas = jogadasInvalidas;
+    }
+
+    public void setJogadasValidas(int jogadasValidas) {
+        this.jogadasValidas = jogadasValidas;
     }
 }
