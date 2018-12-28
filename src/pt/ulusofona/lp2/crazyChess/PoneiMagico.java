@@ -1,5 +1,7 @@
 package pt.ulusofona.lp2.crazyChess;
 
+import java.util.List;
+
 public class PoneiMagico extends CrazyPiece {
 
     @Override
@@ -22,5 +24,10 @@ public class PoneiMagico extends CrazyPiece {
             return "ponei_magico_black.png";
 
         return "ponei_magico_white.png";
+    }
+
+    @Override
+    public List<String> sugestoesMovimento(List<String> sugestoes) {
+        return null;
     }
 }

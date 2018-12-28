@@ -27,18 +27,7 @@ public class TorreH extends CrazyPiece {
         return "torre_h_white.png";
     }
 
-    @Override
-    public boolean movePeca(int xD, int yD) {
-        return false;
-    }
-
     public List<String> sugestoesMovimento(List<String> sugestoes){
-
-        //Não existe = Pediod Invalido
-        if(s.tabuleiro[x][y]==0){
-            sugestoes.add("Pedido Inválido");
-            return sugestoes;
-        }
 
         //Verifica os caminhos para a esquerda (x+1 para evitar a posiçao origem)
         for(int i = x+1; i<=s.dimensao; i++){

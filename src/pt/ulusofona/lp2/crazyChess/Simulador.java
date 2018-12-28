@@ -24,7 +24,7 @@ public class Simulador {
                           new Jogador(idBrancas)};
     int[][] tabuleiro;
     // false=pretas && true=brancas
-    boolean turn = false;
+    boolean turno = false;
     int nrTurn = 0;
 
     public Simulador(int dimensao, int nrPecas, HashMap<Integer, CrazyPiece> hm, int[][] tabuleiro) {
@@ -119,9 +119,9 @@ public class Simulador {
     }
     public void seccao5(String dados[]){
         if (Integer.parseInt(dados[0]) == 10)
-            turn = false;
+            turno = false;
         else
-            turn = true;
+            turno = true;
         jogadores[0].setJogadasValidas(Integer.parseInt(dados[1]));
         jogadores[0].setCapturadas(Integer.parseInt(dados[2]));
         jogadores[0].setJogadasInvalidas(Integer.parseInt(dados[3]));
@@ -181,18 +181,12 @@ public class Simulador {
     }
 
     public boolean processaJogada(int xO, int yO, int xD, int Yd) {
-        //Precisamos
+
         int idPecaJogada = tabuleiro[xO][yO];
 
-        //Feito no movimento de peça
-        if (xO >= dimensao || yO >= dimensao || yO < 0 || xO < 0) {
-            return false;
-        }
-
-        //Fazer no obterSugestoesJogada
         //Não existe peça nas coords  de origem
         if (idPecaJogada == 0) {
-            if (turn) {
+            if (turno) {
                 jogadores[1].incrementaTentativasInvalidas();
             } else {
                 jogadores[0].incrementaTentativasInvalidas();
@@ -202,22 +196,11 @@ public class Simulador {
 
         //Vou buscar a peca a ser jogada
         CrazyPiece pecaJogada = hm.get(idPecaJogada);
-        int equipa = pecaJogada.getIdEquipa();
 
         //Posiçoes do array de jogadores
-        int idEquipaPecaAtual = turn ? 1 : 0; //Converte boolean em int
+        int idEquipaPecaAtual = turno ? 1 : 0; //Converte boolean em int
 
-        //turn = true -> equipa branca a jogar
-        //turn = false -> equipa preta a jogar
-        if (equipa == idBrancas && turn == false) {
-            jogadores[idEquipaPecaAtual].incrementaTentativasInvalidas();
-            return false;
-        } else if (equipa == idPretas && turn == true) {
-            jogadores[idEquipaPecaAtual].incrementaTentativasInvalidas();
-            return false;
-        }
-
-        //Verifica se avança uma unidade
+        //Verifica se avança
         if (pecaJogada.movePeca(xD,Yd)) {
             //se a posicao estiver livre
             if (tabuleiro[xD][Yd] == 0) {
@@ -226,7 +209,7 @@ public class Simulador {
                 //Apagar posicao anterior
                 tabuleiro[xO][yO] = 0;
                 //Troca de turno
-                turn = !turn;
+                turno = !turno;
 
                 jogadores[idEquipaPecaAtual].incrementaJogadasValidas();
                 if (captura) {
@@ -239,7 +222,7 @@ public class Simulador {
                 CrazyPiece c = hm.get(tabuleiro[xD][Yd]);
                 //Id Diferente captura o C
                 if (c.getIdEquipa() != pecaJogada.getIdEquipa()) {
-                    int idEquipaPecaCapturada = !turn ? 1 : 0; //Converte boolean em int da peça capturada
+                    int idEquipaPecaCapturada = !turno ? 1 : 0; //Converte boolean em int da peça capturada
                     c.setPieceCoord(-1, -1);
                     jogadores[idEquipaPecaCapturada].removePeca(c);
                     tabuleiro[xD][Yd] = idPecaJogada;
@@ -247,7 +230,7 @@ public class Simulador {
                     //Apagar posicao anterior
                     tabuleiro[xO][yO] = 0;
                     //Troca de turno
-                    turn = !turn;
+                    turno = !turno;
 
                     jogadores[idEquipaPecaAtual].incrementaJogadasValidas();
                     jogadores[idEquipaPecaAtual].incrementaCapuradas();
@@ -282,7 +265,7 @@ public class Simulador {
     }
 
     public int getIDEquipaAJogar() {
-        if (turn) {
+        if (turno) {
             return idBrancas;
         } else {
             return idPretas;
@@ -374,7 +357,7 @@ public class Simulador {
             //Obter 5 secção
             int idEquipaAtual;
             String output;
-            if (turn)
+            if (turno)
                 idEquipaAtual = idBrancas;
             else
                 idEquipaAtual = idPretas;
@@ -484,7 +467,7 @@ public class Simulador {
         pecaMovida.setPieceCoord(jogadaAnterior[5],jogadaAnterior[6]);
 
         //mudar turno
-        turn = !turn;
+        turno = !turno;
     }
 
     public List<String> obterSugestoesJogada(int xO, int yO){

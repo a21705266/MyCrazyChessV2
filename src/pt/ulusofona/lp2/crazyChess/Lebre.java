@@ -1,5 +1,7 @@
 package pt.ulusofona.lp2.crazyChess;
 
+import java.util.List;
+
 public class Lebre extends CrazyPiece {
     public Lebre(int id, int tipo, int idEquipa, String alcunha, Simulador s){
         super(id,tipo, idEquipa, alcunha, s);
@@ -21,5 +23,10 @@ public class Lebre extends CrazyPiece {
             return "lebre_black.png";
 
         return "lebre_white.png";
+    }
+
+    @Override
+    public List<String> sugestoesMovimento(List<String> sugestoes) {
+        return null;
     }
 }

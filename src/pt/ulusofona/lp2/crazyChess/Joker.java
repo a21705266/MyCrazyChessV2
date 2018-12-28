@@ -1,5 +1,7 @@
 package pt.ulusofona.lp2.crazyChess;
 
+import java.util.List;
+
 public class Joker extends CrazyPiece {
 
     @Override
@@ -22,5 +24,10 @@ public class Joker extends CrazyPiece {
         return "joker_black.png";
 
         return "joker_white.png";
+    }
+
+    @Override
+    public List<String> sugestoesMovimento(List<String> sugestoes) {
+        return null;
     }
 }

@@ -57,6 +57,7 @@ public abstract class CrazyPiece {
     }
     public abstract List<String> sugestoesMovimento(List<String> sugestoes);
     public boolean movePeca(int xD, int yD) {
+
         //retornar falso caso coords de destino estejam fora do tabuleiro
         if (x >= s.dimensao || y >= s.dimensao || y < 0 || x < 0) {
             return false;
@@ -67,7 +68,7 @@ public abstract class CrazyPiece {
         sugestoes = sugestoesMovimento(sugestoes);
 
         //se for invlido retorna falso
-        if(sugestoes.equals("Pedido Inválido")){
+        if(sugestoes.get(0).equals("Pedido Inválido")){
             return false;
         }
         //Percorrer jogadas sugeridas e verificar se as coords destino constam nas sugestoes

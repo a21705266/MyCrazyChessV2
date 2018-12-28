@@ -1,5 +1,7 @@
 package pt.ulusofona.lp2.crazyChess;
 
+import java.util.List;
+
 public class Padre_da_Vila extends CrazyPiece{
 
     public Padre_da_Vila(int id, int tipo, int idEquipa, String alcunha, Simulador s){
@@ -22,5 +24,10 @@ public class Padre_da_Vila extends CrazyPiece{
             return "padre_vila_black.png";
 
         return "padre_vila_white.png";
+    }
+
+    @Override
+    public List<String> sugestoesMovimento(List<String> sugestoes) {
+        return null;
     }
 }
