@@ -463,7 +463,7 @@ public class Simulador {
             capturada.setPieceCoord(x,y);
             jogadores[idEquipaCapturada].addPeca(capturada);
         }
-        //Realocar peça movida
+        //Realocar peça movida/
         pecaMovida.setPieceCoord(jogadaAnterior[5],jogadaAnterior[6]);
 
         //mudar turno
