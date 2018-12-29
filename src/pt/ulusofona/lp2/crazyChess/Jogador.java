@@ -9,10 +9,23 @@ public class Jogador {
     int capturadas = 0;
     int jogadasValidas = 0;
     int tentativasInvalidas = 0;
+    int nrTurno = 0;
 
     Jogador(int idEquipa) {
         this.idEquipa = idEquipa;
         listaPecas = new ArrayList<>();
+    }
+
+    public int getNrTurno() {
+        return nrTurno;
+    }
+
+    public void incrementaNrTurno() {
+        nrTurno++;
+    }
+
+    public void decrementaNrTurno() {
+        nrTurno--;
     }
 
     public void addPeca(CrazyPiece piece) {
@@ -59,5 +72,9 @@ public class Jogador {
 
     public void setJogadasValidas(int jogadasValidas) {
         this.jogadasValidas = jogadasValidas;
+    }
+
+    public int getTentativasInvalidas() {
+        return tentativasInvalidas;
     }
 }

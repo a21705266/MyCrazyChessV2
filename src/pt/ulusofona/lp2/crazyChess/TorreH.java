@@ -30,7 +30,7 @@ public class TorreH extends CrazyPiece {
     public List<String> sugestoesMovimento(List<String> sugestoes){
 
         //Verifica os caminhos para a esquerda (x+1 para evitar a posiçao origem)
-        for(int i = x+1; i<=s.dimensao; i++){
+        for(int i = x+1; i<=s.getDimensao(); i++){
             //Chama função de verificar
             if(verificaPosicao(i,y)){
                 sugestoes.add(i + ", " + y);

@@ -10,17 +10,17 @@ public class Rainha extends CrazyPiece {
             return id + " | " + "Rainha" + " | " + idEquipa + " | " + alcunha + " @ (n/a)";
             //devolve se a peça estiver capturada
         } else {
-            return id + " | " + "Rainha" + " | " + idEquipa + " | " + alcunha + " @ (" + x + ", " + y+")";
+            return id + " | " + "Rainha" + " | " + idEquipa + " | " + alcunha + " @ (" + x + ", " + y + ")";
         }
     }
 
-    public Rainha(int id, int tipo, int idEquipa, String alcunha, Simulador s){
-        super(id,tipo, idEquipa, alcunha, s);
+    public Rainha(int id, int tipo, int idEquipa, String alcunha, Simulador s) {
+        super(id, tipo, idEquipa, alcunha, s);
     }
 
     @Override
     public String getImagePNG() {
-        if(idEquipa == 10)
+        if (idEquipa == 10)
             return "rainha_black.png";
 
         return "rainha_white.png";
@@ -28,64 +28,85 @@ public class Rainha extends CrazyPiece {
 
     @Override
     public List<String> sugestoesMovimento(List<String> sugestoes) {
-        int xO = x;
-        int yO = y;
-
-        //x=2, y=1, dimensao = 9
-        if(verificaPosicao((xO+5), yO)){
-            for(int i=1; i<=5;i++){
-                if(verificaPosicao((xO+i), yO)){
-                    sugestoes.add((xO + i) + ", " + yO); //3,1 a 7,1
-                }else{
-                    break;
-                }
-
-            }
-            if(verificaPosicao((xO+5), (yO+5))){
-                for(int i=1; i<=5; i++){
-                    if(verificaPosicao((xO+i), (yO+i))) {
-                        sugestoes.add((xO + i) + ", " + (yO + i)); //3,2 a 7,6
-                    }else{
-                        break;
-                    }
-                }
-            }
-
-            if(verificaPosicao((xO+5), (yO-5))){
-                for(int i=1; i<=5; i++){
-                    if(verificaPosicao((xO+i), (yO-i))) {
-                        sugestoes.add((xO + i) + ", " + (yO - i)); //3,0
-                    }else{
-                        break;
-                    }
-                }
+        //+6 porque queremos contar ainda com a posicao x-5
+        //direita
+        for(int i = x+1; i != x + 6 ; i++){
+            //Chama função de verificar
+            if(verificaPosicao(i,y)){
+                sugestoes.add(i + ", " + y);
+            }else{
+                //Se o verificaPosicao econtrar uma peça no caminho da mesma equipa termina o ciclo
+                break;
             }
         }
 
-        if(verificaPosicao((xO-5), yO)){
-            for(int i =1; i<=5; i++){
-                if(verificaPosicao((xO-i), (yO))) {
-                    sugestoes.add((xO - i) + ", " + yO);
-                }else{
-                    break;
-                }
+        //Verifica os caminhos para a esquerda (x-1 para evitar a posiçao origem)
+        //esquerda
+        for(int i = x-1; i != x - 6; i--){
+            //Chama função de verificar
+            if(verificaPosicao(i,y)){
+                //adiciona String
+                sugestoes.add(i + ", " + y);
+            }else{
+                //Se o verificaPosicao econtrar uma peça no caminho da mesma equipa termina o ciclo
+                break;
             }
+        }
 
-            if(verificaPosicao((xO-5), (yO+5))){
-                for(int i=1; i<=5; i++) {
-                    if(verificaPosicao((xO-i), (yO+i))) {
-                        sugestoes.add((xO - i) + ", " + (yO + i));
-                    }else{
-                        break;
-                    }
-                }
+        //Verifica os caminhos para a esquerda (x+1 para evitar a posiçao origem)
+        //baixo
+        for(int i = y+1; i != y + 6; i++){
+            //Chama função de verificar
+            if(verificaPosicao(x,i)){
+                //adiciona String
+                sugestoes.add(x + ", " + i);
+            }else{
+                //Se o verificaPosicao econtrar uma peça no caminho da mesma equipa termina o ciclo
+                break;
             }
-
-            if(verificaPosicao((xO-5), (yO-5))){
-                for(int i=1; i<=5; i++){
-                    if(verificaPosicao((xO),(yO-i)))
-                        sugestoes.add(xO + ", " + (yO-i));
-                }
+        }
+        //Verifica os caminhos para a esquerda (x-1 para evitar a posiçao origem)
+        //cima
+        for(int i = y-1; i != y - 6; i--){
+            //Chama função de verificar
+            if(verificaPosicao(x,i)){
+                //adiciona String
+                sugestoes.add(x + ", " + i);
+            }else{
+                //Se o verificaPosicao econtrar uma peça no caminho da mesma equipa termina o ciclo
+                break;
+            }
+        }
+        //baixo direita
+        for(int i = x + 1, j = y + 1; i != x + 6 && j != y + 6; i++,j++){
+            if(verificaPosicao(i,j)){
+                sugestoes.add(i + ", " + j);
+            }else{
+                break;
+            }
+        }
+        //baixo esquerda
+        for(int i = x - 1, j = y + 1; i != x - 6 && j != y + 6; i--,j++){
+            if(verificaPosicao(i,j)){
+                sugestoes.add(i + ", " + j);
+            }else{
+                break;
+            }
+        }
+        //cima esquerda
+        for(int i = x - 1, j = y - 1; i != x - 6 && j != y - 6; i--,j--){
+            if(verificaPosicao(i,j)){
+                sugestoes.add(i + ", " + j);
+            }else{
+                break;
+            }
+        }
+        //cima direita
+        for(int i = x + 1, j = y - 1; i != x + 6 && j != y - 6; i++,j--){
+            if(verificaPosicao(i,j)){
+                sugestoes.add(i + ", " + j);
+            }else{
+                break;
             }
         }
 

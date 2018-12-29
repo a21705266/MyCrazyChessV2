@@ -28,7 +28,7 @@ public class TorreV extends CrazyPiece {
 
     public List<String> sugestoesMovimento(List<String> sugestoes){
         //Verifica os caminhos para a esquerda (x+1 para evitar a posiçao origem)
-        for(int i = y+1; i<=s.dimensao; i++){
+        for(int i = y+1; i<=s.getDimensao(); i++){
             //Chama função de verificar
             if(verificaPosicao(x,i)){
                 //adiciona String

@@ -1,6 +1,7 @@
 
 package pt.ulusofona.lp2.crazyChess;
 
+import javax.print.DocFlavor;
 import java.io.*;
 import java.util.*;
 
@@ -9,9 +10,8 @@ public class Simulador {
     public static final int idPretas = 10;
     public static String inputPath;
 
-    //0.idEquipa | 1.jogadasVal | 2.capturadas | 3.jogadasInval
+    //0.idEquipa | 1.capturadas | 2.jogadasVal |3.jogadasInval
     //4.Peça que moveu | 5.x | 6.y | 7.Peça Capturada
-
     //Se algum destes campos não for alterado deve escrever 0;
     public int[] jogadaAnterior = new int[8];
     boolean undo = false;
@@ -19,13 +19,15 @@ public class Simulador {
     int dimensao;
     public int nrPecas;
     boolean captura = false;
+
     HashMap<Integer, CrazyPiece> hm = new HashMap<Integer, CrazyPiece>();
     Jogador[] jogadores = new Jogador[]{new Jogador(idPretas),
                           new Jogador(idBrancas)};
     int[][] tabuleiro;
     // false=pretas && true=brancas
     boolean turno = false;
-    int nrTurn = 0;
+    //Verifica se houve 10 jogadas sem captura
+    int countTerminaJogo = 0;
 
     public Simulador(int dimensao, int nrPecas, HashMap<Integer, CrazyPiece> hm, int[][] tabuleiro) {
         this.dimensao = dimensao;
@@ -180,8 +182,7 @@ public class Simulador {
         return this.dimensao;
     }
 
-    public boolean processaJogada(int xO, int yO, int xD, int Yd) {
-
+    public boolean validaJogada(int xO, int yO){
         int idPecaJogada = tabuleiro[xO][yO];
 
         //Não existe peça nas coords  de origem
@@ -196,9 +197,49 @@ public class Simulador {
 
         //Vou buscar a peca a ser jogada
         CrazyPiece pecaJogada = hm.get(idPecaJogada);
+        int equipa = pecaJogada.getIdEquipa();
 
         //Posiçoes do array de jogadores
         int idEquipaPecaAtual = turno ? 1 : 0; //Converte boolean em int
+
+        //turn = true -> equipa branca a jogar
+        //turn = false -> equipa preta a jogar
+        if (equipa == idBrancas && turno == false){
+            jogadores[idEquipaPecaAtual].incrementaTentativasInvalidas();
+            return false;
+        } else if (equipa == idPretas && turno == true) {
+            jogadores[idEquipaPecaAtual].incrementaTentativasInvalidas();
+            return false;
+        }
+        return true;
+    }
+
+    public int[][] getTabuleiro() {
+        return tabuleiro;
+    }
+
+    public int getDimensao() {
+        return dimensao;
+    }
+
+    public HashMap<Integer, CrazyPiece> getHm() {
+        return hm;
+    }
+
+    public boolean processaJogada(int xO, int yO, int xD, int Yd) {
+
+        int idPecaJogada = tabuleiro[xO][yO];
+        //Vou buscar a peca a ser jogada
+        CrazyPiece pecaJogada = hm.get(idPecaJogada);
+
+
+        //Posiçoes do array de jogadores
+        int idEquipaPecaAtual = turno ? 1 : 0; //Converte boolean em int
+
+        if(!validaJogada(xO,yO)){
+            return false;
+        }
+        setJogadaAnterior(jogadores[idEquipaPecaAtual],pecaJogada);
 
         //Verifica se avança
         if (pecaJogada.movePeca(xD,Yd)) {
@@ -212,10 +253,14 @@ public class Simulador {
                 turno = !turno;
 
                 jogadores[idEquipaPecaAtual].incrementaJogadasValidas();
-                if (captura) {
-                    nrTurn++;
-                }
 
+                jogadaAnterior[1] = 1;
+
+                if (captura) {
+                    countTerminaJogo++;
+                }
+                undo = false;
+                jogadores[idEquipaPecaAtual].incrementaNrTurno();
                 return true;
             }// existe peca na posicao destino
             else if (hm.containsKey(tabuleiro[xD][Yd])) {
@@ -234,17 +279,32 @@ public class Simulador {
 
                     jogadores[idEquipaPecaAtual].incrementaJogadasValidas();
                     jogadores[idEquipaPecaAtual].incrementaCapuradas();
-                    nrTurn = 0;
+                    jogadores[idEquipaPecaAtual].incrementaNrTurno();
+
+                    //preenche array de jogadaAnterior
+                    jogadaAnterior[1] = 1;
+                    jogadaAnterior[2] = 1;
+
+                    //count que valida fim de jogo caso nao haja capturas durante 10 turnos
+                    countTerminaJogo = 0;
+                    //houve captura - regra dos 10 turnos empate ativa
                     captura = true;
+                    //podemos fazer undo novamente
+                    undo = false;
                     return true;
                     // Peças da mesma equipa
                 } else {
                     jogadores[idEquipaPecaAtual].incrementaTentativasInvalidas();
+
+                    jogadaAnterior[3] = 1;
+                    undo = false;
                     return false;
                 }
             }
         }
         jogadores[idEquipaPecaAtual].incrementaTentativasInvalidas();
+        jogadaAnterior[3] = 1;
+        undo = false;
         return false;
     }
 
@@ -275,7 +335,7 @@ public class Simulador {
     public List<String> getResultados() {
         List<String> resultados = new ArrayList<String>();
         resultados.add("JOGO DE CRAZY CHESS");
-        if (nrTurn >= 10) {
+        if (countTerminaJogo >= 10) {
             resultados.add("Resultado: EMPATE");
         } else {
             if (jogadores[1].listaComprimento() == 0 && jogadores[0].listaComprimento() > 0) {
@@ -309,7 +369,7 @@ public class Simulador {
             return true;
         } else if (jogadores[0].listaComprimento() == 1 && jogadores[1].listaComprimento() == 1) {
             return true;
-        } else if (nrTurn >= 10 && captura == true) {
+        } else if (countTerminaJogo >= 10 && captura == true) {
             return true;
         }
         return false;
@@ -338,7 +398,7 @@ public class Simulador {
     }
 
     public int getTurno() {
-        return nrTurn;
+        return countTerminaJogo;
     }
 
     public Simulador getSimulador() {
@@ -423,7 +483,7 @@ public class Simulador {
     }
 
     //0-Pretas || 1-Brancas
-    public static int calculaEquipa(int idEquipa){
+    public int calculaEquipa(int idEquipa){
         if(idEquipa == 10)
             return 0;
         else
@@ -431,8 +491,12 @@ public class Simulador {
     }
 
     public void anularJogadaAnterior(){
-        //0.idEquipa | 1.jogadasVal | 2.capturadas | 3.jogadasInval
+        //0.idEquipa | 1.capturadas | 2.jogadasVal |3.jogadasInval
         //4.Peça que moveu | 5.x | 6.y | 7.Peça Capturada
+
+        if(undo){
+            return;
+        }
 
         int idEquipa = jogadaAnterior[0];
 
@@ -456,18 +520,29 @@ public class Simulador {
             //Alterar Coords
             int x = pecaMovida.getX();
             int y = pecaMovida.getY();
+
             //obter idEquipa
             int idEquipaCapturada = calculaEquipa(capturada.idEquipa);
 
             //set coords e adicionar peca de novo
             capturada.setPieceCoord(x,y);
             jogadores[idEquipaCapturada].addPeca(capturada);
+            tabuleiro[x][y] = capturada.getId();
+        }else {
+            tabuleiro[pecaMovida.getX()][pecaMovida.getY()] = 0;
         }
         //Realocar peça movida
         pecaMovida.setPieceCoord(jogadaAnterior[5],jogadaAnterior[6]);
+        tabuleiro[pecaMovida.getX()][pecaMovida.getY()] = pecaMovida.getId();
+
+        jogadores[equipaPecaAtual].decrementaNrTurno();
 
         //mudar turno
+        if (captura) {
+            countTerminaJogo--;
+        }
         turno = !turno;
+        undo = true;
     }
 
     public List<String> obterSugestoesJogada(int xO, int yO){
@@ -486,6 +561,23 @@ public class Simulador {
         }
 
         return peca.sugestoesMovimento(sugestoes);
+    }
+
+    public void setJogadaAnterior(Jogador j , CrazyPiece c){
+
+        //0.idEquipa | 1.capturadas | 2.jogadasInval
+        //3.Peça que moveu | 4.x | 5.y | 6.Peça Capturada
+
+        jogadaAnterior[0] = c.getIdEquipa();
+        jogadaAnterior[4] = c.getId();
+        jogadaAnterior[5] = c.getX();
+        jogadaAnterior[6] = c.getY();
+
+    }
+
+    public Jogador getJogadores(int jogador) {
+            return jogadores[jogador];
+
     }
 
 }
